@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time till next aniversary</title>
+  <style>
+    body {
+      font-family: 'Cursive', Arial, sans-serif;
+      background: linear-gradient(to bottom, #ff9a9e, #fecfef);
+      color: #fff;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    h1 {
+      font-size: 3rem;
+      margin: 0;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    .subheading {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+      color: #fff;
+      opacity: 0.9;
+    }
+    .timer {
+      display: flex;
+      gap: 10px;
+    }
+    .time-box {
+      position: relative;
+      width: 80px;
+      height: 100px;
+      background: #ffe6f2; /* Light pink background */
+      color: #ff6f91; /* Darker pink text */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 3rem;
+      font-weight: bold;
+      border-radius: 8px;
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      text-align: center;
+    }
+    .unit {
+      font-size: 1rem;
+      margin-top: 10px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.8);
+    }
+    footer {
+      position: absolute;
+      bottom: 20px;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    footer a {
+      color: #fff;
+      text-decoration: underline;
+    }
+    /* Flip animation */
+    @keyframes flip {
+      0% {
+        transform: rotateX(0);
+      }
+      50% {
+        transform: rotateX(-90deg);
+      }
+      100% {
+        transform: rotateX(0);
+      }
+    }
+    .flipping {
+      animation: flip 0.7s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h1>COUNTDOWN TO SPECIAL DAY❤️</h1>
+    <p class="subheading">This countdown will exactly turn to zero on 6th of every month❤️</p>
+    <div class="timer" id="timer-container">
+      <div>
+        <div class="time-box" id="days">00</div>
+        <div class="unit">Days</div>
+      </div>
+      <div>
+        <div class="time-box" id="hours">00</div>
+        <div class="unit">Hours</div>
+      </div>
+      <div>
+        <div class="time-box" id="minutes">00</div>
+        <div class="unit">Minutes</div>
+      </div>
+      <div>
+        <div class="time-box" id="seconds">00</div>
+        <div class="unit">Seconds</div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    Made with 💖 for our special bond.
+  </footer>
+
+  <script>
+    let previousValues = { days: null, hours: null, minutes: null, seconds: null };
+
+    function updateCountdown() {
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+      const nextTarget = new Date(currentYear, currentMonth, 6, 0, 0, 0);
+
+      // If today is after the 6th, move the target to the next month
+      if (now > nextTarget) {
+        nextTarget.setMonth(currentMonth + 1);
+      }
+
+      const timeDifference = nextTarget - now;
+
+      if (timeDifference <= 0) {
+        return;
+      }
+
+      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+      updateFlippingCard("days", days);
+      updateFlippingCard("hours", hours);
+      updateFlippingCard("minutes", minutes);
+      updateFlippingCard("seconds", seconds);
+    }
+
+    function updateFlippingCard(id, newValue) {
+      const element = document.getElementById(id);
+
+      // Only update if the value has changed
+      if (previousValues[id] !== newValue) {
+        element.classList.add("flipping");
+        setTimeout(() => {
+          element.textContent = String(newValue).padStart(2, "0");
+          element.classList.remove("flipping");
+        }, 350); // Halfway through the flip animation
+        previousValues[id] = newValue;
+      }
+    }
+
+    // Update the countdown every second
+    setInterval(updateCountdown, 1000);
+    updateCountdown(); // Initial call
+  </script>
+</body>
+</html>
+
